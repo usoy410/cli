@@ -37,6 +37,9 @@ class Command:
                     if self.filter_log(line):
                         print(line, end="")
 
+                # Auto-start lid monitor when shell starts (if on laptop)
+                self._auto_start_lid_monitor()
+
     def shell(self, *args: list[str]) -> str:
         return subprocess.check_output(["qs", "-c", "caelestia", *args], text=True)
 
@@ -58,3 +61,33 @@ class Command:
 
     def message(self, *args: list[str]) -> None:
         print(self.shell("ipc", "call", *args), end="")
+
+    def _auto_start_lid_monitor(self) -> None:
+        """Automatically start lid monitor if on a laptop and not already running."""
+        import os
+        import subprocess
+        from pathlib import Path
+
+        # Check if this is a laptop (has lid device)
+        lid_path = Path("/proc/acpi/button/lid/LID/state")
+        if not lid_path.exists():
+            return  # Not a laptop, skip
+
+        # Check if lid monitor is already running
+        pid_file = Path("/tmp/caelestia_lid_monitor.pid")
+        if pid_file.exists():
+            try:
+                pid = int(pid_file.read_text().strip())
+                os.kill(pid, 0)  # Check if process exists
+                return  # Already running
+            except (ValueError, ProcessLookupError):
+                pid_file.unlink()  # Clean up stale PID file
+
+        # Start lid monitor daemon silently
+        try:
+            subprocess.Popen([
+                "caelestia", "lidmonitor", "--daemon"
+            ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+        except (subprocess.SubprocessError, FileNotFoundError):
+            # Silently fail if caelestia command not available yet
+            pass

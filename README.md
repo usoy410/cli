@@ -108,18 +108,19 @@ options:
   -v, --version  print the current version
 
 subcommands:
-  valid subcommands
+   valid subcommands
 
-  COMMAND        the subcommand to run
-    shell        start or message the shell
-    toggle       toggle a special workspace
-    scheme       manage the colour scheme
-    screenshot   take a screenshot
-    record       start a screen recording
-    clipboard    open clipboard history
-    emoji        emoji/glyph utilities
-    wallpaper    manage the wallpaper
-    resizer      window resizer daemon
+   COMMAND        the subcommand to run
+     shell        start or message the shell
+     toggle       toggle a special workspace
+     scheme       manage the colour scheme
+     screenshot   take a screenshot
+     record       start a screen recording
+     clipboard    open clipboard history
+     emoji        emoji/glyph utilities
+     wallpaper    manage the wallpaper
+     resizer      window resizer daemon
+     lidmonitor   monitor laptop lid events and auto-lock
 ```
 
 ## Configuring
@@ -134,7 +135,7 @@ All configuration options are in `~/.config/caelestia/cli.json`.
         "extraArgs": []
     },
     "wallpaper": {
-        "postHook": "echo $WALLPAPER_PATH"  
+        "postHook": "echo $WALLPAPER_PATH"
     },
     "theme": {
         "enableTerm": true,

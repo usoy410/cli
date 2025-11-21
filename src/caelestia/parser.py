@@ -1,6 +1,6 @@
 import argparse
 
-from caelestia.subcommands import clipboard, emoji, record, resizer, scheme, screenshot, shell, toggle, wallpaper
+from caelestia.subcommands import clipboard, emoji, lidmonitor, record, resizer, scheme, screenshot, shell, toggle, wallpaper
 from caelestia.utils.paths import wallpapers_dir
 from caelestia.utils.scheme import get_scheme_names, scheme_variants
 from caelestia.utils.wallpaper import get_wallpaper
@@ -126,5 +126,13 @@ def parse_args() -> (argparse.ArgumentParser, argparse.Namespace):
     resizer_parser.add_argument("width", nargs="?", help="width to resize to")
     resizer_parser.add_argument("height", nargs="?", help="height to resize to")
     resizer_parser.add_argument("actions", nargs="?", help="comma-separated actions to apply (float,center,pip)")
+
+    # Create parser for lidmonitor opts
+    lidmonitor_parser = command_parser.add_parser("lidmonitor", help="monitor laptop lid events and auto-lock")
+    lidmonitor_parser.set_defaults(cls=lidmonitor.Command)
+    lidmonitor_parser.add_argument("-d", "--daemon", action="store_true", help="start lid monitor as daemon")
+    lidmonitor_parser.add_argument("-s", "--stop", action="store_true", help="stop lid monitor daemon")
+    lidmonitor_parser.add_argument("--status", action="store_true", help="show lid monitor status")
+    lidmonitor_parser.add_argument("-n", "--notify", action="store_true", help="send notifications on state changes")
 
     return parser, parser.parse_args()
